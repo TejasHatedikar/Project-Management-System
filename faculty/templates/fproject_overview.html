@@ -1,0 +1,153 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Overview</title>
+    <link rel="stylesheet" href="{% static 'project_overview.css' %}"> <!-- Link to any additional CSS -->
+
+    <style>
+        .logout-button {
+            background-color: #ff4d4d; /* Red background */
+            color: white; /* White text */
+            border: none; /* No border */
+            border-radius: 5px; /* Rounded corners */
+            padding: 10px 20px; /* Top/bottom and left/right padding */
+            font-size: 16px; /* Font size */
+            cursor: pointer; /* Pointer cursor on hover */
+            transition: background-color 0.3s ease; /* Smooth transition for background color */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+        }
+
+        .logout-button:hover {
+            background-color: #ff1a1a; /* Darker red on hover */
+        }
+
+        .logout-button:active {
+            background-color: #e60000; /* Even darker on click */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Slightly stronger shadow */
+        }
+
+        .view-project {
+            background-color: #4d97ff; /* Red background */
+            color: white; /* White text */
+            border: none; /* No border */
+            border-radius: 5px; /* Rounded corners */
+            padding: 10px 20px; /* Top/bottom and left/right padding */
+            font-size: 16px; /* Font size */
+            cursor: pointer; /* Pointer cursor on hover */
+            transition: background-color 0.3s ease; /* Smooth transition for background color */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+        }
+
+        .view-project:hover {
+            background-color: #1a72ff; /* Darker red on hover */
+        }
+
+        .view-project:active {
+            background-color: #0060e6; /* Even darker on click */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Slightly stronger shadow */
+        }
+
+        footer{
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav>
+        <div class="container">
+            <div class="logo">
+                <a href="#">Major Project Management</a>
+            </div>
+
+            <!-- Hamburger Menu for Mobile -->
+            <button class="hamburger" onclick="toggleMenu()">&#9776;</button>
+
+            <!-- Desktop Navigation Links -->
+            <ul class="nav-links">
+                <!-- <li><a href="timelines.html">Timelines</a></li> -->
+                <li><a href="{% url 'fdomain' %}">Domains</a></li>
+                <!-- <li><a href="project_overview.html">All Projects</a></li> -->
+                <li><a href="{% url 'fmyProjects' %}">My Projects</a></li>
+                <li><a href="{% url 'fhome' %}">My Profile</a></li> <!-- Updated link -->
+                <li><a href="{% url 'logout' %}"><button class="logout-button">Logout</button></a></li>
+            </ul>
+    
+            <!-- Mobile Navigation Links -->
+            <ul class="nav-links-mobile">
+                <!-- <li><a style="color: aliceblue; text-decoration: none;" href="timelines.html"><b>Timelines</b></a></li> -->
+                <li><a style="color: aliceblue; text-decoration: none;" href="{% url 'fdomain' %}"><b>Domains</b></a></li>
+                <!-- <li><a style="color: aliceblue; text-decoration: none;" href="project_overview.html"><b>All Projects</b></a></li> -->
+                <li><a style="color: aliceblue; text-decoration: none;" href="{% url 'fmyProjects' %}"><b>My Projects</b></a></li>
+                <li><a style="color: aliceblue; text-decoration: none;" href="{% url 'fhome' %}"><b>My Profile</b></a></li> <!-- Updated link -->
+                <li><a style="color: aliceblue; text-decoration: none;" href="{% url 'logout' %}"><button class="logout-button">Logout</button></a></li> 
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <section class="content">
+            <h2>{{ title }}</h2>
+            <p>Details about various projects, including group number, project titles, descriptions, guides, and tags.</p>
+
+            <!-- Project Table -->
+            <table>
+                <thead>
+                    <tr>
+                        <th>Group No.</th>
+                        <th>Project Title</th>
+                        <th>Project Description</th>
+                        <th>Guide</th>
+                        <th>Tags</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if groups %}
+                        {% for group in groups %}
+                            {% if group.pname != 'Name of the projectt' %}
+                                <tr>
+                                    <td>{{ group.group_id }}</td>
+                                    <td>{{ group.pname }}</td>
+                                    <td>{{ group.description }}</td>
+                                    <td>{{ group.guide }}</td>
+                                    <td>{{ group.tags }}</td>
+                                    <td>
+                                        <form action="{% url 'fviewProject' %}" method="post">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="email" value="{{group.email}}">
+                                            <button type="submit" class="view-project">View Project</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="6">No projects found.</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        &copy; Course Project Management. All rights reserved.
+    </footer>
+    
+    <script>
+        // JavaScript function to toggle the mobile menu
+        function toggleMenu() {
+            const menu = document.querySelector('.nav-links-mobile');
+            menu.classList.toggle('active');
+        }
+    </script>
+
+</body>
+</html>
